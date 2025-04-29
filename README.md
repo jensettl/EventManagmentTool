@@ -2,7 +2,13 @@
 
 ## Description
 
-This is a simple event management system that allows you to create, manage, and attend events.
+Simple event management system that allows you to create, manage, and attend events.
+
+![Banner](assets/images/banner_home.png)
+
+## Features
+
+![Banner](assets/images/features.png)
 
 ## Background
 
