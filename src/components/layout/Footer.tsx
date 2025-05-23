@@ -1,9 +1,123 @@
-import React from 'react';
-import { Calendar, Mail, MapPin, PhoneCall } from 'lucide-react';
+import React, { useState } from 'react';
+import { Calendar, Mail, MapPin, PhoneCall, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
+interface PolicyModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  content: React.ReactNode;
+}
+
+const PolicyModal: React.FC<PolicyModalProps> = ({ isOpen, onClose, title, content }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl relative">
+        <div className="flex items-center justify-between p-6 border-b">
+          <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-500 transition-colors"
+          >
+            <X className="h-6 w-6" />
+          </button>
+        </div>
+        <div className="p-6 max-h-[70vh] overflow-y-auto prose max-w-none">
+          {content}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
+  const [activeModal, setActiveModal] = useState<'terms' | 'privacy' | 'cookie' | 'accessibility' | null>(null);
+
+  const closeModal = () => setActiveModal(null);
+
+  const termsContent = (
+    <div>
+      <h3 className="text-xl font-bold text-gray-900 mb-4">1. Acceptance of Terms</h3>
+      <p className="text-gray-700 mb-6">By accessing and using EventHub, you agree to be bound by these Terms of Service and all applicable laws and regulations.</p>
+      
+      <h3 className="text-xl font-bold text-gray-900 mb-4">2. User Accounts</h3>
+      <p className="text-gray-700 mb-6">You are responsible for maintaining the confidentiality of your account credentials and for all activities under your account.</p>
+      
+      <h3 className="text-xl font-bold text-gray-900 mb-4">3. Event Creation and Participation</h3>
+      <p className="text-gray-700 mb-6">Users may create and participate in events subject to these terms. Event creators are responsible for the accuracy of event information.</p>
+      
+      <h3 className="text-xl font-bold text-gray-900 mb-4">4. Code of Conduct</h3>
+      <p className="text-gray-700 mb-6">Users must behave respectfully and professionally. Harassment, hate speech, or discriminatory behavior is not tolerated.</p>
+      
+      <h3 className="text-xl font-bold text-gray-900 mb-4">5. Intellectual Property</h3>
+      <p className="text-gray-700">Content posted on EventHub must respect copyright and intellectual property rights. Users retain ownership of their content.</p>
+    </div>
+  );
+
+  const privacyContent = (
+    <div>
+      <h3 className="text-xl font-bold text-gray-900 mb-4">Information We Collect</h3>
+      <p className="text-gray-700 mb-4">We collect information you provide directly, including:</p>
+      <ul className="list-disc pl-6 mb-6 text-gray-700">
+        <li>Name and contact information</li>
+        <li>Profile details and preferences</li>
+        <li>Event participation history</li>
+        <li>Communications within the platform</li>
+      </ul>
+      
+      <h3 className="text-xl font-bold text-gray-900 mb-4">How We Use Your Information</h3>
+      <p className="text-gray-700 mb-4">Your information helps us:</p>
+      <ul className="list-disc pl-6 mb-6 text-gray-700">
+        <li>Personalize your experience</li>
+        <li>Improve our services</li>
+        <li>Communicate about events and updates</li>
+        <li>Ensure platform security</li>
+      </ul>
+      
+      <h3 className="text-xl font-bold text-gray-900 mb-4">Data Protection</h3>
+      <p className="text-gray-700">We implement security measures to protect your personal information and maintain data privacy.</p>
+    </div>
+  );
+
+  const cookieContent = (
+    <div>
+      <h3 className="text-xl font-bold text-gray-900 mb-4">What Are Cookies</h3>
+      <p className="text-gray-700 mb-6">Cookies are small text files stored on your device that help us improve your experience.</p>
+      
+      <h3 className="text-xl font-bold text-gray-900 mb-4">Types of Cookies We Use</h3>
+      <ul className="mb-6 text-gray-700">
+        <li className="mb-2"><strong className="text-gray-900">Essential Cookies:</strong> Required for basic platform functionality</li>
+        <li className="mb-2"><strong className="text-gray-900">Preference Cookies:</strong> Remember your settings and choices</li>
+        <li className="mb-2"><strong className="text-gray-900">Analytics Cookies:</strong> Help us understand how you use our platform</li>
+        <li className="mb-2"><strong className="text-gray-900">Marketing Cookies:</strong> Used to deliver relevant content</li>
+      </ul>
+      
+      <h3 className="text-xl font-bold text-gray-900 mb-4">Managing Cookies</h3>
+      <p className="text-gray-700">You can control cookies through your browser settings. Note that disabling certain cookies may limit platform functionality.</p>
+    </div>
+  );
+
+  const accessibilityContent = (
+    <div>
+      <h3 className="text-xl font-bold text-gray-900 mb-4">Our Commitment</h3>
+      <p className="text-gray-700 mb-6">EventHub is committed to ensuring digital accessibility for people of all abilities.</p>
+      
+      <h3 className="text-xl font-bold text-gray-900 mb-4">Accessibility Features</h3>
+      <ul className="list-disc pl-6 mb-6 text-gray-700">
+        <li>Screen reader compatibility</li>
+        <li>Keyboard navigation support</li>
+        <li>Color contrast compliance</li>
+        <li>Alt text for images</li>
+        <li>Resizable text support</li>
+      </ul>
+      
+      <h3 className="text-xl font-bold text-gray-900 mb-4">Feedback</h3>
+      <p className="text-gray-700">We welcome your feedback on the accessibility of EventHub. Please let us know if you encounter accessibility barriers.</p>
+    </div>
+  );
   
   return (
     <footer className="bg-gray-900 text-white pt-12 pb-8">
@@ -141,28 +255,66 @@ const Footer: React.FC = () => {
         <div className="mt-4 text-center md:text-left">
           <ul className="flex flex-wrap justify-center md:justify-start space-x-6 text-sm text-gray-400">
             <li>
-              <a href="#" className="hover:text-white transition-colors">
+              <button
+                onClick={() => setActiveModal('terms')}
+                className="hover:text-white transition-colors"
+              >
                 Terms of Service
-              </a>
+              </button>
             </li>
             <li>
-              <a href="#" className="hover:text-white transition-colors">
+              <button
+                onClick={() => setActiveModal('privacy')}
+                className="hover:text-white transition-colors"
+              >
                 Privacy Policy
-              </a>
+              </button>
             </li>
             <li>
-              <a href="#" className="hover:text-white transition-colors">
+              <button
+                onClick={() => setActiveModal('cookie')}
+                className="hover:text-white transition-colors"
+              >
                 Cookie Policy
-              </a>
+              </button>
             </li>
             <li>
-              <a href="#" className="hover:text-white transition-colors">
+              <button
+                onClick={() => setActiveModal('accessibility')}
+                className="hover:text-white transition-colors"
+              >
                 Accessibility
-              </a>
+              </button>
             </li>
           </ul>
         </div>
       </div>
+
+      {/* Policy Modals */}
+      <PolicyModal
+        isOpen={activeModal === 'terms'}
+        onClose={closeModal}
+        title="Terms of Service"
+        content={termsContent}
+      />
+      <PolicyModal
+        isOpen={activeModal === 'privacy'}
+        onClose={closeModal}
+        title="Privacy Policy"
+        content={privacyContent}
+      />
+      <PolicyModal
+        isOpen={activeModal === 'cookie'}
+        onClose={closeModal}
+        title="Cookie Policy"
+        content={cookieContent}
+      />
+      <PolicyModal
+        isOpen={activeModal === 'accessibility'}
+        onClose={closeModal}
+        title="Accessibility"
+        content={accessibilityContent}
+      />
     </footer>
   );
 };
