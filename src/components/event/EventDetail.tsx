@@ -9,9 +9,10 @@ import { users } from '../../data/mockData';
 
 interface EventDetailProps {
   event: Event;
+  onSignInClick: () => void;
 }
 
-const EventDetail: React.FC<EventDetailProps> = ({ event }) => {
+const EventDetail: React.FC<EventDetailProps> = ({ event, onSignInClick }) => {
   const { isAuthenticated } = useAuth();
   const { rsvpToEvent, leaveEvent } = useEvents();
   
@@ -160,7 +161,10 @@ const EventDetail: React.FC<EventDetailProps> = ({ event }) => {
                 ) : (
                   <div className="text-center p-4 bg-gray-100 rounded-md">
                     <p className="text-gray-700 mb-2">Sign in to RSVP for this event</p>
-                    <button className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors">
+                    <button
+                      onClick={onSignInClick}
+                      className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors"
+                    >
                       Sign In
                     </button>
                   </div>
