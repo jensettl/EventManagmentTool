@@ -1,15 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Image, Link as LinkIcon } from 'lucide-react';
-import { ChatMessage, User } from '../../types';
+import { ChatMessage } from '../../types';
 import { useAuth } from '../../context/AuthContext';
 import { useChat } from '../../context/ChatContext';
 import ChatMessageItem from './ChatMessageItem';
 
 interface ChatWindowProps {
   eventId: string;
+  onSignInClick: () => void;
 }
 
-const ChatWindow: React.FC<ChatWindowProps> = ({ eventId }) => {
+const ChatWindow: React.FC<ChatWindowProps> = ({ eventId, onSignInClick }) => {
   const [message, setMessage] = useState('');
   const [attachmentUrl, setAttachmentUrl] = useState('');
   const [attachmentType, setAttachmentType] = useState<'image' | 'link' | null>(null);
@@ -162,7 +163,10 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ eventId }) => {
       ) : (
         <div className="p-4 border-t bg-gray-50 text-center">
           <p className="text-gray-600 mb-2">Sign in to join the conversation</p>
-          <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+          <button 
+            onClick={onSignInClick}
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+          >
             Sign In
           </button>
         </div>
