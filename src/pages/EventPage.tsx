@@ -1,14 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEvents } from '../context/EventsContext';
 import EventDetail from '../components/event/EventDetail';
 import ChatWindow from '../components/event/ChatWindow';
-import { CalendarX } from 'lucide-react';
+import { CalendarX, ArrowLeft } from 'lucide-react';
+import AuthModal from '../components/auth/AuthModal';
 
 const EventPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { getEventById, selectedEvent, loading } = useEvents();
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   
   useEffect(() => {
     if (id) {
@@ -19,6 +21,10 @@ const EventPage: React.FC = () => {
       }
     }
   }, [id, getEventById, navigate, loading]);
+
+  const handleBack = () => {
+    navigate(-1);
+  };
   
   if (loading) {
     return (
@@ -48,12 +54,32 @@ const EventPage: React.FC = () => {
   return (
     <div className="py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <EventDetail event={selectedEvent} />
+        <button
+          onClick={handleBack}
+          className="mb-6 inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5 mr-1" />
+          <span>Back</span>
+        </button>
+        
+        <EventDetail 
+          event={selectedEvent} 
+          onSignInClick={() => setIsAuthModalOpen(true)} 
+        />
         
         {/* Chat section */}
         <div className="mt-8">
-          <ChatWindow eventId={selectedEvent.id} />
+          <ChatWindow 
+            eventId={selectedEvent.id} 
+            onSignInClick={() => setIsAuthModalOpen(true)}
+          />
         </div>
+
+        {/* Auth Modal */}
+        <AuthModal 
+          isOpen={isAuthModalOpen} 
+          onClose={() => setIsAuthModalOpen(false)} 
+        />
       </div>
     </div>
   );
