@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import EventPage from './pages/EventPage';
 import MyEvents from './pages/MyEvents';
+import CreateEvent from './pages/CreateEvent';
 import { AuthProvider } from './context/AuthContext';
 import { EventsProvider } from './context/EventsContext';
 import { ChatProvider } from './context/ChatContext';
@@ -24,6 +25,7 @@ function App() {
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/event/:id" element={<EventPage />} />
                   <Route path="/my-events" element={<MyEvents />} />
+                  <Route path="/create-event" element={<CreateEvent />} />
                   <Route path="*" element={<Dashboard />} />
                 </Routes>
               </main>
