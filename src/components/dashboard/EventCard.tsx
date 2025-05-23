@@ -75,14 +75,16 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
       </div>
       
       {/* Card Content */}
-      <div className="p-5 flex-grow">
-        <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2">{event.title}</h3>
+      <div className="flex flex-col flex-grow p-5">
+        <div className="flex-grow">
+          <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2">{event.title}</h3>
+          <p className="text-gray-600 mb-4 line-clamp-3">
+            {event.shortDescription}
+          </p>
+        </div>
         
-        <p className="text-gray-600 mb-4 flex-grow line-clamp-3">
-          {event.shortDescription}
-        </p>
-        
-        <div className="space-y-2 text-sm text-gray-500">
+        {/* Details section - now fixed at bottom */}
+        <div className="mt-auto space-y-2 text-sm text-gray-500">
           <div className="flex items-center">
             <Calendar className="h-4 w-4 mr-2 text-purple-500" />
             <span>{formatDate(event.date)}</span>
