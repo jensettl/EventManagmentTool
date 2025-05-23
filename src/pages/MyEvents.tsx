@@ -1,22 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useEvents } from '../context/EventsContext';
 import { useAuth } from '../context/AuthContext';
 import EventGrid from '../components/dashboard/EventGrid';
 import { Link } from 'react-router-dom';
 import { Calendar, CalendarPlus } from 'lucide-react';
+import AuthModal from '../components/auth/AuthModal';
 
 const MyEvents: React.FC = () => {
   const { events, loading } = useEvents();
   const { currentUser, isAuthenticated } = useAuth();
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   
   // Filter events where the user is a participant
   const myEvents = isAuthenticated && currentUser
     ? events.filter(event => event.participants.includes(currentUser.id))
     : [];
   
-  // Group events by status
-  const ongoingEvents = myEvents.filter(event => event.status === 'ongoing');
-  const upcomingEvents = myEvents.filter(event => event.status === 'upcoming');
+  // Group events by status - combine ongoing and upcoming
+  const futureEvents = myEvents.filter(event => 
+    event.status === 'ongoing' || event.status === 'upcoming'
+  ).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  
   const pastEvents = myEvents.filter(event => event.status === 'past');
   
   if (!isAuthenticated) {
@@ -31,12 +35,19 @@ const MyEvents: React.FC = () => {
             </p>
             <div className="mt-6">
               <button 
+                onClick={() => setIsAuthModalOpen(true)}
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
               >
                 Sign In
               </button>
             </div>
           </div>
+
+          {/* Auth Modal */}
+          <AuthModal 
+            isOpen={isAuthModalOpen} 
+            onClose={() => setIsAuthModalOpen(false)} 
+          />
         </div>
       </div>
     );
@@ -97,19 +108,11 @@ const MyEvents: React.FC = () => {
         </div>
         
         <div className="space-y-12">
-          {ongoingEvents.length > 0 && (
+          {futureEvents.length > 0 && (
             <EventGrid 
-              events={ongoingEvents} 
+              events={futureEvents} 
               loading={loading} 
-              title="Happening Now" 
-            />
-          )}
-          
-          {upcomingEvents.length > 0 && (
-            <EventGrid 
-              events={upcomingEvents} 
-              loading={loading} 
-              title="Your Upcoming Events" 
+              title="Upcoming & Ongoing Events" 
             />
           )}
           
