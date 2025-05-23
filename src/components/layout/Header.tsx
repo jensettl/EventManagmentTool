@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Calendar, User, Menu, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import AuthModal from '../auth/AuthModal';
@@ -10,8 +10,22 @@ const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const location = useLocation();
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const closeMenu = () => setIsMenuOpen(false);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsProfileDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
   
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
@@ -65,10 +79,10 @@ const Header: React.FC = () => {
           {/* User section */}
           <div className="flex items-center">
             {isAuthenticated ? (
-              <div className="relative">
+              <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                  className="flex items-center space-x-2 max-w-xs bg-white text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 p-2 rounded-full"
+                  className="flex items-center space-x-2 max-w-xs bg-white text-sm focus:outline-none p-2 rounded-full"
                 >
                   <img
                     className="h-8 w-8 rounded-full object-cover"
@@ -83,8 +97,7 @@ const Header: React.FC = () => {
                 {/* Profile dropdown */}
                 {isProfileDropdownOpen && (
                   <div 
-                    className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
-                    onBlur={() => setIsProfileDropdownOpen(false)}
+                    className="absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
                   >
                     <Link
                       to="/profile"
